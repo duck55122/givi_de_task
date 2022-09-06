@@ -131,10 +131,14 @@ def main():
         return_val = forgotPassword()
         if return_val == None:
           print('your user id is not present, please register')
+      else:
+        print('you choose wrong option')
   elif reason.lower() == 'forgot password':
     return_val = forgotPassword()
     if return_val == None:
       print('your user id is not present, please register')
+  else:
+    print('You choose wrong option')
 
 
 if __name__ == "__main__":
