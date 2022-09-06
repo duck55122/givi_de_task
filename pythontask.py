@@ -76,33 +76,66 @@ def password_check(password):
     print('password must have atleast one special character')
     return
 
-def main():
-  reason = input('Do you want to register or login to the site: ')#given user choice to choose between login and reister
-  if reason.lower() == 'register':
-    username = input('please enter your user mail id: ')
-    usercheck_return = user_check(username)
-    if usercheck_return == 1:
-      passcode = input('please enter the password: ' )
-      passwordcheck_return = password_check(passcode)
-      if passwordcheck_return == 1:
-        with open('creds.txt','a') as obj:
-          obj.write("#Credential file:\nUsername={}\tPassword={}".format(username,passcode))
-  elif reason.lower() == 'login' :
-    '''to check if there is a creds file. so that if user tried to login directly even before registering 
-    when this piece of code runs for first time. instead of throwing and error it creates a empty file'''
-    if not (file_presence):
-      obj = open('creds.txt','w')
-      obj.close()
+def register():
+  username = input('please enter your user mail id: ')
+  usercheck_return = user_check(username)
+  if usercheck_return == 1:
+    passcode = input('please enter the password: ' )
+    passwordcheck_return = password_check(passcode)
+    if passwordcheck_return == 1:
+      with open('creds.txt','a') as obj:
+        obj.write("Username={}\tPassword={}\n".format(username,passcode))
 
-    username = input('enter your login user mail: ')
-    passcode = input('enter your password: ')
-    cred_string = 'Username={}\tPassword={}'.format(username,passcode)
-    with open('creds.txt','r') as obj :
-      credentials = obj.readlines()
-      if cred_string in credentials:
-        print('Login successful')
-      else:
-        print("we don't find the account, please try to register")
+def login():
+  '''to check if there is a creds file.'''
+  ''' so that if user tried to login directly even before registering 
+    when this piece of code runs for first time. instead of throwing and error it creates a empty file'''
+  if not (os.path.exists('creds.txt')):
+    obj = open('creds.txt','w')
+    obj.close()
+
+  username = input('enter your login user mail: ')
+  passcode = input('enter your password: ')
+  cred_string = 'Username={}\tPassword={}'.format(username,passcode)
+  with open('creds.txt','r') as obj :
+    credentials = obj.readlines()
+    for cred in credentials:
+      #print(cred)
+      if cred_string == cred.rstrip():
+        print('login success')
+        return 1
+      
+
+def forgotPassword():
+  user = input('enter the user mail id: ')
+  with open('creds.txt','r') as obj:
+    creds = obj.readlines()
+    for cred in creds:
+      cred = cred.split()
+      if user == cred[0][9:]:
+        print('your password is {}'.format(cred[1][9:]))
+        return 1
+
+
+def main():
+  reason = input('choose between register, login or forgot password to the site: ')#given user choice to choose between login and reister
+  if reason.lower() == 'register':
+    register()
+  elif reason.lower() == 'login' :
+    login_return = login()
+    if login_return != 1:
+      choice = input('choose between register or forgot password: ')
+      if choice.lower() == 'register':
+        register()
+      elif choice.lower() == 'forgot password':
+        return_val = forgotPassword()
+        if return_val == None:
+          print('your user id is not present, please register')
+  elif reason.lower() == 'forgot password':
+    return_val = forgotPassword()
+    if return_val == None:
+      print('your user id is not present, please register')
+
 
 if __name__ == "__main__":
     main()
