@@ -2,79 +2,24 @@ import os
 
 def user_check(user_name):
   '''To chech the user name is valid or not'''
-  if ('@' in user_name) and (user_name.count('@') == 1) :#to check there is only one @
-    user_name = user_name.split('@') #seaparating the username and domain id in to two values
-    if user_name[0]:
-      for i in user_name[0]:
-        if (ord(i) >= 0 and ord(i) <= 45) or (ord(i) == 47)  or (ord(i) == 127) or \
-         (ord(i) >= 58 and ord(i) <= 64) or (ord(i) >= 91 and ord(i) <= 96) or \
-         (ord(i) >= 123 and ord(i) <= 126) : #to check there are no special characters except for '.'
-          print('The user name is not valid')
-          return
-        else:
-          if '.' in user_name[1]:
-            if (user_name[1][0] != '.') :#checking if there is a '.' right after '@'
-              count = 0
-              for i in user_name[1]:
-                if (ord(i) >= 0 and ord(i) <= 45) or (ord(i) == 47)  or (ord(i) == 127) or \
-                 (ord(i) >= 58 and ord(i) <= 64) or (ord(i) >= 91 and ord(i) <= 96) or \
-                  (ord(i) >= 123 and ord(i) <= 126) :#to check there are no special characters except for '.'
-                  print('domain has special characters')
-                  count = count + 1
-                  return
-                if count == 0:
-                  print('mail is valid')
-                  return 1
-            else:
-              print('domain started with ".", which is not valid')
-              return
-          else:
-            print('This is not valid user mail id')
-            return
+  email_pattern = r"[A-Za-z]{1}[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}"
+  if re.match(email_pattern,user_name):
+    print('email is valid')
+    return 1
   else:
-    print('This is not valid user mail id')
+    print('email is invalid')
+    return 0
 
 def password_check(password):
   '''to check password is valid or not'''
   #checking the length of password which is not less than 5 and not greater than 16
-  if (len(password) < 6) or (len(password) > 16) :
-    print('password is too long or too short')
-    return
-  count = 0 #code to check the count of special charactger in the password
-  for i in password:
-    if (ord(i) >= 0 and ord(i) <= 47)  or (ord(i) == 127) or (ord(i) >= 58 and ord(i) <= 64) \
-    or (ord(i) >= 91 and ord(i) <= 96) or (ord(i) >= 123 and ord(i) <= 126) :
-      count = count + 1
-  if count > 0 :
-    count = 0 #code to check the count of numbers in the password
-    for i in password:
-      if (ord(i) >= 48 and ord(i) <= 57 ):
-        count = count + 1
-    if count > 0:
-      count = 0 # code to check if there are any character with caps
-      for i in password:
-        if (ord(i) >= 65 and ord(i) <= 90) :
-          count = count + 1
-      if count > 0:
-        count = 0 # code to check if there are any characters with small caps
-        for i in password:
-          if (ord(i) >= 97 and ord(i) <= 122):
-            count = count + 1
-        if count > 0:
-          print('PASSWORD VALID')
-          return 1
-        else:
-          print('password must have atleast one small letter')
-          return
-      else:
-        print('password must have atleast one capital letter')
-        return
-    else:
-      print('password must have atleast one number')
-      return
+  password_pattern = r"(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,16}"
+  if re.match(password_pattern,password):
+    print('password is valid')
+    return 1
   else:
-    print('password must have atleast one special character')
-    return
+    print('password is invalid')
+    return 0
 
 def register():
   username = input('please enter your user mail id: ')
